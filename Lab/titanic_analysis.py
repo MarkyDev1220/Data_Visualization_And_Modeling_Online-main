@@ -2,17 +2,38 @@
 # Part 1: Imports & Data Load
 # -------------------------------
 from pathlib import Path
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import sys
 
-data_path = Path("titanic_passengers.csv")
+
+script_dir = Path(__file__).resolve().parent
+possible_paths = [
+    script_dir / "titanic_passengers.csv",
+    script_dir.parent / "titanic_passengers.csv",
+    script_dir.parent / "Data" / "titanic_passengers.csv"
+]
+
+data_path = None
+for path in possible_paths:
+    if path.exists():
+        data_path = path
+        break
+
+if data_path is None:
+    print("ERROR: Could not find 'titanic_passengers.csv'. Looked in:")
+    for p in possible_paths:
+        print(" -", p)
+    sys.exit(1)
+
+# Load the CSV
 df = pd.read_csv(data_path)
 
+print(f"Loaded data from: {data_path}")
 print(df.head())
-print(df.shape)
+print("Data shape:", df.shape)
 
 
 # -------------------------------
